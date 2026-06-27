@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Letter Generator AI</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f0f1a, #1a1a2e);
+      color: #e0e0ff;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+    .card {
+      background: #1a1a2e;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    h1 {
+      text-align: center;
+      color: white;
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin: 15px 0 6px;
+      font-weight: 500;
+      color: #c0c0ff;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #2a2a3a;
+      color: white;
+      font-size: 1rem;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 20px;
+      width: 100%;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #6366f1;
+    }
+    .preview {
+      background: white;
+      color: #1f2937;
+      padding: 40px;
+      border-radius: 12px;
+      line-height: 1.7;
+      font-size: 1.05rem;
+      min-height: 600px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .letter-header {
+      text-align: right;
+      margin-bottom: 30px;
+    }
+    .letter-body {
+      text-align: justify;
+    }
+    .tools {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+    .tools button {
+      width: auto;
+      padding: 10px 20px;
+      font-size: 0.95rem;
+    }
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <h1>✉️ Cover Letter Generator AI</h1>
+  
+  <div class="container">
+    <!-- Input Form -->
+    <div class="card">
+      <h2>Your Information</h2>
+      
+      <label>Your Full Name</label>
+      <input type="text" id="name" placeholder="Alex Rivera">
+
+      <label>Job Title You're Applying For</label>
+      <input type="text" id="jobTitle" placeholder="Senior Product Designer">
+
+      <label>Company Name</label>
+      <input type="text" id="company" placeholder="TechVision Inc.">
+
+      <label>Your Key Strengths / Achievements (one per line)</label>
+      <textarea id="strengths" placeholder="Led a team of 8 designers...&#10;Increased conversion rate by 45%..."></textarea>
+
+      <label>Why You're Excited About This Role/Company</label>
+      <textarea id="why" placeholder="I'm particularly drawn to your focus on..."></textarea>
+
+      <button onclick="generateCoverLetter()">Generate Cover Letter ✨</button>
+    </div>
+
+    <!-- Preview -->
+    <div class="card">
+      <h2>Generated Cover Letter</h2>
+      <div id="preview" class="preview">
+        Your cover letter will appear here...
+      </div>
+      
+      <div class="tools">
+        <button onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+        <button onclick="downloadCoverLetter()">⬇️ Download as .txt</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function generateCoverLetter() {
+      const name = document.getElementById('name').value.trim() || "Your Name";
+      const jobTitle = document.getElementById('jobTitle').value.trim() || "the position";
+      const company = document.getElementById('company').value.trim() || "the company";
+      const strengths = document.getElementById('strengths').value.trim();
+      const why = document.getElementById('why').value.trim();
+
+      let strengthsHTML = strengths ? 
+        "<p>" + strengths.split('\n').filter(s => s.trim()).map(s => "• " + s.trim()).join('<br>') + "</p>" : 
+        "<p>I have a proven track record of delivering exceptional results in my previous roles.</p>";
+
+      const letter = `
+        <div class="letter-header">
+          <p><strong>${name}</strong><br>
+          ${new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})}</p>
+        </div>
+
+        <p>Dear Hiring Manager,</p>
+
+        <p>I am excited to apply for the <strong>${jobTitle}</strong> position at <strong>${company}</strong>. 
+        With my background in creating impactful solutions and driving results, I am confident I would be a valuable addition to your team.</p>
+
+        ${strengthsHTML}
+
+        <p>${why ? why : "I am particularly drawn to "+company+" because of your innovative approach and commitment to excellence."}</p>
+
+        <p>I would welcome the opportunity to bring my skills and enthusiasm to ${company} and contribute to your continued success. 
+        I am available at your earliest convenience for an interview and can be reached at [Your Phone] or [Your Email].</p>
+
+        <p>Thank you for your time and consideration. I look forward to the possibility of speaking with you soon.</p>
+
+        <p>Best regards,<br><br><strong>${name}</strong></p>
+      `;
+
+      document.getElementById('preview').innerHTML = letter;
+    }
+
+    function copyToClipboard() {
+      const preview = document.getElementById('preview');
+      const text = preview.innerText;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        alert("✅ Cover letter copied to clipboard!");
+      });
+    }
+
+    function downloadCoverLetter() {
+      const preview = document.getElementById('preview');
+      const text = preview.innerText;
+      const name = document.getElementById('name').value.trim() || "Cover_Letter";
+      
+      const blob = new Blob([text], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${name.replace(/ /g, '_')}_Cover_Letter.txt`;
+      link.click();
+    }
+
+    // Optional: Auto-generate example when page loads
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById('name').value = "Alex Rivera";
+        document.getElementById('jobTitle').value = "Senior Frontend Developer";
+        document.getElementById('company').value = "Nexus Labs";
+        document.getElementById('strengths').value = "Built scalable web applications used by 50k+ users\nImproved page load speed by 65%\nLed migration to React + TypeScript";
+        document.getElementById('why').value = "I admire how Nexus Labs is pushing the boundaries of AI-powered user experiences.";
+        generateCoverLetter();
+      }, 800);
+    };
+  </script>
+</body>
+</html>
